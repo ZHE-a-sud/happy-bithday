@@ -50,7 +50,7 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
 <main class="stage" id="stage">
   <p class="kh">ជូនពរថ្ងៃកំណើត</p>
   <h1>Happy Birthday</h1>
-  <p class="name">Songsa Ke 🎉❤️</p>
+  <p class="name">jing jing Songsa Ke 🎉❤️</p>
 
   <svg class="cake" id="cake" viewBox="0 0 240 230" role="img" aria-label="នំខេកថ្ងៃកំណើតមានទៀនបី">
     <ellipse cx="120" cy="212" rx="110" ry="12" fill="#ffffff" opacity=".18"/>
@@ -79,7 +79,7 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
 
 <script>
 (function(){
-  var NAME='Jing Jing Songsa Ke 🎉❤️ ';
+  var NAME='Songsa Ke 🎉❤️ ';
   var bg=document.getElementById('bg');
   for(var r=0;r<7;r++){var d=document.createElement('div');d.className='row';d.textContent=('Happy Birthday '+NAME).repeat(14);bg.appendChild(d);}
 
@@ -135,17 +135,31 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
     }else{lit=true;cake.classList.remove('out');blow.textContent='🕯️ ផ្លុំទៀន';count(0);}
   });
 
-  // music: Happy Birthday via WebAudio
-  var F={C:523.25,D:587.33,E:659.25,F:698.46,G:392,A:440,B:493.88,c:523.25,d:587.33,e:659.25,f:698.46,g:783.99};
+  // music: plays song.mp3 if you upload one, otherwise a built-in Happy Birthday tune
+  var F={B:493.88,A:440,G:392,c:523.25,d:587.33,e:659.25,f:698.46,g:783.99};
   var SONG=[['G',.75],['G',.25],['A',1],['G',1],['c',1],['B',2],['G',.75],['G',.25],['A',1],['G',1],['d',1],['c',2],['G',.75],['G',.25],['g',1],['e',1],['c',1],['B',1],['A',2],['f',.75],['f',.25],['e',1],['c',1],['d',1],['c',2]];
-  var ac,playing=false,timer;
-  var mb=document.getElementById('music');
-  function tone(f,t,d){var o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+.05);}
-  function play(){var t=ac.currentTime+.1,beat=.5;SONG.forEach(function(n){tone(F[n[0]],t,n[1]*beat*.95);t+=n[1]*beat;});timer=setTimeout(function(){if(playing)play();},(t-ac.currentTime+1.2)*1000);}
+  function makeWav(){
+    var sr=22050,beat=.5,total=0;SONG.forEach(function(n){total+=n[1]*beat;});
+    var len=Math.ceil((total+1.5)*sr),data=new Float32Array(len),t=0;
+    SONG.forEach(function(n){var f=F[n[0]],d=n[1]*beat,s=Math.floor(t*sr),e=Math.min(len,s+Math.floor((d+.25)*sr));
+      for(var i=s;i<e;i++){var x=(i-s)/sr,env=Math.min(1,x/.01)*Math.exp(-x*2.2);
+        data[i]+=.32*env*(Math.sin(6.283*f*x)+.4*Math.sin(12.566*f*x)+.15*Math.sin(18.85*f*x));}
+      t+=d;});
+    var buf=new ArrayBuffer(44+len*2),v=new DataView(buf);
+    function w(o,str){for(var i=0;i<str.length;i++)v.setUint8(o+i,str.charCodeAt(i));}
+    w(0,'RIFF');v.setUint32(4,36+len*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,len*2,true);
+    for(var i=0;i<len;i++){var sm=Math.max(-1,Math.min(1,data[i]));v.setInt16(44+i*2,sm*32767,true);}
+    return URL.createObjectURL(new Blob([buf],{type:'audio/wav'}));
+  }
+  var src=makeWav(),audio=null,playing=false,mb=document.getElementById('music');
+  try{fetch('song.mp3',{method:'HEAD'}).then(function(r){if(r.ok)src='song.mp3';}).catch(function(){});}catch(e){}
   mb.addEventListener('click',function(){
     try{
-      if(!playing){ac=ac||new (window.AudioContext||window.webkitAudioContext)();ac.resume();playing=true;mb.textContent='🔇 បិទភ្លេង';play();}
-      else{playing=false;clearTimeout(timer);ac.close();ac=null;mb.textContent='🎵 បើកភ្លេង';}
+      if(!playing){
+        if(!audio){audio=new Audio(src);audio.loop=true;audio.volume=1;}
+        var p=audio.play();if(p&&p.catch)p.catch(function(){});
+        playing=true;mb.textContent='🔇 បិទភ្លេង';
+      }else{audio.pause();playing=false;mb.textContent='🎵 បើកភ្លេង';}
     }catch(e){}
   });
 })();
