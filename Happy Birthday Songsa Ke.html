@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday Songsa Ke 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;700&family=Moul&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#1b0b3a;--bg2:#08031a;--ink:#fff7ee;--gold:#ffd66b;--pink:#ff4f9a;--cyan:#5be7ff;--glass:rgba(255,255,255,.08);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#1b0b3a;--bg2:#08031a;--ink:#fff7ee}}
+:root[data-theme="dark"]{--bg1:#1b0b3a;--bg2:#08031a;--ink:#fff7ee}
+html{color-scheme:dark;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(ellipse at 50% 30%,var(--bg1),var(--bg2) 75%);color:var(--ink);font-family:'Kantumruy Pro','Noto Sans Khmer',sans-serif;overflow:hidden}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.bg{position:fixed;inset:0;z-index:0;display:flex;flex-direction:column;justify-content:space-around;opacity:.13;pointer-events:none;overflow:hidden}
+.row{white-space:nowrap;font-family:'Pacifico',cursive;font-size:clamp(22px,5vw,40px);width:max-content;animation:slide 40s linear infinite}
+.row:nth-child(even){animation-direction:reverse;animation-duration:55s}
+@keyframes slide{to{transform:translateX(-50%)}}
+.stage{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;text-align:center}
+.kh{font-family:'Moul','Kantumruy Pro',serif;font-size:clamp(16px,4vw,26px);color:var(--gold);margin:0;text-shadow:0 0 18px rgba(255,214,107,.6)}
+h1{font-family:'Pacifico',cursive;font-weight:400;margin:0;font-size:clamp(38px,11vw,84px);line-height:1.1;
+background:linear-gradient(100deg,var(--pink),var(--gold),var(--cyan),var(--pink));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite;filter:drop-shadow(0 0 18px rgba(255,79,154,.55))}
+@keyframes shine{to{background-position:300% 0}}
+.name{font-size:clamp(20px,5vw,32px);font-weight:700;margin:0;letter-spacing:.02em}
+.cake{width:clamp(170px,42vw,250px);height:auto;margin-top:4px;filter:drop-shadow(0 12px 30px rgba(255,79,154,.45));animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+.flame{transform-origin:50% 100%;animation:flick .35s ease-in-out infinite alternate;transition:opacity .5s,transform .5s}
+.flame:nth-of-type(2){animation-delay:.1s}.flame:nth-of-type(3){animation-delay:.2s}
+@keyframes flick{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.9,1.12) rotate(3deg)}}
+.out .flame{opacity:0;transform:scale(.2);animation:none}
+.counter{background:var(--glass);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px);border-radius:18px;padding:10px 22px;min-width:240px}
+.counter b{display:block;font-size:clamp(26px,7vw,40px);color:var(--gold);font-variant-numeric:tabular-nums}
+.counter span{font-size:14px;opacity:.85}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+button{font:inherit;font-weight:700;color:#2a0a2e;background:linear-gradient(135deg,var(--gold),#ff9ecb);border:0;border-radius:999px;padding:12px 22px;cursor:pointer;box-shadow:0 6px 20px rgba(255,79,154,.45);transition:transform .15s}
+button:active{transform:scale(.95)}
+button.alt{background:var(--glass);color:var(--ink);border:1px solid rgba(255,255,255,.25);box-shadow:none}
+button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.hint{font-size:13px;opacity:.7;margin:0}
+@media (prefers-reduced-motion:reduce){.row,h1,.cake,.flame{animation:none}}
+</style>
+</head>
+<body>
+<div class="bg" id="bg" aria-hidden="true"></div>
+<canvas id="fx"></canvas>
+
+<main class="stage" id="stage">
+  <p class="kh">ជូនពរថ្ងៃកំណើត</p>
+  <h1>Happy Birthday</h1>
+  <p class="name">Songsa Ke 🎉❤️</p>
+
+  <svg class="cake" id="cake" viewBox="0 0 240 230" role="img" aria-label="នំខេកថ្ងៃកំណើតមានទៀនបី">
+    <ellipse cx="120" cy="212" rx="110" ry="12" fill="#ffffff" opacity=".18"/>
+    <rect x="22" y="140" width="196" height="68" rx="14" fill="#ff4f9a"/>
+    <path d="M22 160q14 18 28 0t28 0 28 0 28 0 28 0 28 0 28 0v-12H22z" fill="#fff7ee"/>
+    <rect x="52" y="92" width="136" height="54" rx="12" fill="#ffd66b"/>
+    <path d="M52 110q11 16 22 0t22 0 22 0 22 0 22 0 6 0v-10H52z" fill="#fff7ee"/>
+    <circle cx="60" cy="184" r="5" fill="#ffd66b"/><circle cx="100" cy="190" r="5" fill="#5be7ff"/><circle cx="140" cy="184" r="5" fill="#ffd66b"/><circle cx="180" cy="190" r="5" fill="#5be7ff"/>
+    <g id="candles">
+      <rect x="86" y="62" width="9" height="32" rx="3" fill="#5be7ff"/>
+      <rect x="115" y="56" width="9" height="38" rx="3" fill="#ff4f9a"/>
+      <rect x="144" y="62" width="9" height="32" rx="3" fill="#5be7ff"/>
+      <path class="flame" d="M90.500 36c-7 9-6 17 0 21 6-4 7-12 0-21z" fill="#ffb347"/>
+      <path class="flame" d="M119.500 30c-7 9-6 17 0 21 6-4 7-12 0-21z" fill="#ffd66b"/>
+      <path class="flame" d="M148.500 36c-7 9-6 17 0 21 6-4 7-12 0-21z" fill="#ffb347"/>
+    </g>
+  </svg>
+
+  <div class="counter"><b id="num">០</b><span>ពរជ័យសម្រាប់ថ្ងៃពិសេស</span></div>
+  <div class="btns">
+    <button id="blow">🕯️ ផ្លុំទៀន</button>
+    <button class="alt" id="music">🎵 បើកភ្លេង</button>
+  </div>
+  <p class="hint">ចុចលើអេក្រង់ដើម្បីបាញ់កាំជណ្តើរភ្លើង ✨</p>
+</main>
+
+<script>
+(function(){
+  var NAME='Songsa Ke 🎉❤️ ';
+  var bg=document.getElementById('bg');
+  for(var r=0;r<7;r++){var d=document.createElement('div');d.className='row';d.textContent=('Happy Birthday '+NAME).repeat(14);bg.appendChild(d);}
+
+  var cv=document.getElementById('fx'),ctx=cv.getContext('2d'),W,H;
+  var calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function resize(){var k=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*k;cv.height=H*k;ctx.setTransform(k,0,0,k,0,0);}
+  resize();addEventListener('resize',resize);
+
+  var sparks=[],rockets=[],conf=[],COL=['#ff4f9a','#ffd66b','#5be7ff','#b78bff','#7dffb0'];
+  function burst(x,y,n){var h=Math.random()*360;for(var i=0;i<n;i++){var a=Math.random()*6.283,s=Math.random()*5+1.5;sparks.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,d:.011+Math.random()*.01,h:h+Math.random()*50});}}
+  function rocket(x){rockets.push({x:x==null?W*(.15+Math.random()*.7):x,y:H,vy:-(8+Math.random()*4),ty:H*(.15+Math.random()*.35)});}
+  function confetti(n){for(var i=0;i<n;i++)conf.push({x:Math.random()*W,y:-20-Math.random()*H*.4,vx:Math.random()*2-1,vy:Math.random()*3+2,r:Math.random()*6,vr:Math.random()*.3-.15,c:COL[i%COL.length],w:6+Math.random()*6});}
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    ctx.globalCompositeOperation='lighter';
+    rockets=rockets.filter(function(r){r.y+=r.vy;r.vy*=.985;ctx.fillStyle='#fff';ctx.fillRect(r.x,r.y,2,8);if(r.y<=r.ty||r.vy>-1.5){burst(r.x,r.y,80);return false}return true;});
+    sparks=sparks.filter(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.vx*=.985;p.l-=p.d;if(p.l<=0)return false;ctx.fillStyle='hsla('+p.h+',100%,62%,'+p.l+')';ctx.beginPath();ctx.arc(p.x,p.y,2.2*p.l+.4,0,6.283);ctx.fill();return true;});
+    ctx.globalCompositeOperation='source-over';
+    conf=conf.filter(function(c){c.x+=c.vx;c.y+=c.vy;c.r+=c.vr;if(c.y>H+20)return false;ctx.save();ctx.translate(c.x,c.y);ctx.rotate(c.r);ctx.fillStyle=c.c;ctx.fillRect(-c.w/2,-2,c.w,4);ctx.restore();return true;});
+    requestAnimationFrame(frame);
+  }
+  frame();
+
+  if(!calm)setInterval(function(){if(!document.hidden)rocket();},1300);
+  addEventListener('pointerdown',function(e){if(e.target.closest('button'))return;rocket(e.clientX);burst(e.clientX,e.clientY,50);});
+
+  // falling emoji
+  var EM=['🎉','🎊','❤️','🎂','🥳','💖','🎈','✨'],layer=document.body;
+  if(!calm)setInterval(function(){
+    if(document.hidden)return;
+    var el=document.createElement('div');el.textContent=EM[Math.floor(Math.random()*EM.length)];
+    el.style.cssText='position:fixed;top:-40px;left:'+(Math.random()*100)+'vw;font-size:'+(20+Math.random()*22)+'px;z-index:1;pointer-events:none;transition:transform '+(4+Math.random()*3)+'s linear;';
+    layer.appendChild(el);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){el.style.transform='translateY(115vh) rotate('+(Math.random()*720-360)+'deg)';});});
+    setTimeout(function(){el.remove();},7500);
+  },380);
+
+  // wish counter
+  var num=document.getElementById('num'),shown=0,raf;
+  function fmt(n){try{return n.toLocaleString('km-KH')}catch(e){return n.toLocaleString('en-US')}}
+  function count(to){cancelAnimationFrame(raf);var from=shown,t0=performance.now(),dur=3200;
+    (function step(t){var p=Math.min((t-t0)/dur,1);shown=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));num.textContent=fmt(shown);if(p<1)raf=requestAnimationFrame(step);})(t0);}
+  num.textContent=fmt(0);
+
+  // candles
+  var cake=document.getElementById('cake'),blow=document.getElementById('blow'),lit=true;
+  blow.addEventListener('click',function(){
+    if(lit){
+      lit=false;cake.classList.add('out');blow.textContent='🔥 បំភ្លឺទៀនឡើងវិញ';
+      for(var i=0;i<7;i++)setTimeout(function(){rocket();},i*250);
+      confetti(160);burst(W/2,H*.4,140);count(10000);
+    }else{lit=true;cake.classList.remove('out');blow.textContent='🕯️ ផ្លុំទៀន';count(0);}
+  });
+
+  // music: Happy Birthday via WebAudio
+  var F={C:523.25,D:587.33,E:659.25,F:698.46,G:392,A:440,B:493.88,c:523.25,d:587.33,e:659.25,f:698.46,g:783.99};
+  var SONG=[['G',.75],['G',.25],['A',1],['G',1],['c',1],['B',2],['G',.75],['G',.25],['A',1],['G',1],['d',1],['c',2],['G',.75],['G',.25],['g',1],['e',1],['c',1],['B',1],['A',2],['f',.75],['f',.25],['e',1],['c',1],['d',1],['c',2]];
+  var ac,playing=false,timer;
+  var mb=document.getElementById('music');
+  function tone(f,t,d){var o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+.05);}
+  function play(){var t=ac.currentTime+.1,beat=.5;SONG.forEach(function(n){tone(F[n[0]],t,n[1]*beat*.95);t+=n[1]*beat;});timer=setTimeout(function(){if(playing)play();},(t-ac.currentTime+1.2)*1000);}
+  mb.addEventListener('click',function(){
+    try{
+      if(!playing){ac=ac||new (window.AudioContext||window.webkitAudioContext)();ac.resume();playing=true;mb.textContent='🔇 បិទភ្លេង';play();}
+      else{playing=false;clearTimeout(timer);ac.close();ac=null;mb.textContent='🎵 បើកភ្លេង';}
+    }catch(e){}
+  });
+})();
+</script>
+</body>
+</html>
