@@ -45,6 +45,13 @@ h1{font-family:'Pacifico',cursive;font-weight:400;margin:0;font-size:clamp(40px,
 @keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(.9,1.12) rotate(3deg)}}
 .out .flame{opacity:0;animation:none}
 .counter b{display:block;font-size:clamp(34px,10vw,64px);color:var(--gold);font-variant-numeric:tabular-nums;text-shadow:0 0 25px rgba(255,214,107,.7)}
+.gtitle{font-family:'Pacifico',cursive;font-size:clamp(24px,7vw,46px);color:var(--gold);text-shadow:0 0 22px var(--pink);margin:0}
+.pics{position:relative;width:min(88vw,520px);height:min(56vh,520px)}
+.pola{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 1s}
+.pola.show{opacity:1}
+.pola img{max-width:100%;max-height:100%;border:6px solid #fff7ee;border-bottom-width:24px;border-radius:8px;box-shadow:0 0 45px rgba(255,79,154,.75),0 20px 50px rgba(0,0,0,.6);animation:kb 14s ease-out forwards}
+@keyframes kb{from{transform:scale(.96)}to{transform:scale(1.07) translate(var(--dx,0),var(--dy,0))}}
+.nopic .pics{display:none}.nopic .gtitle{font-size:clamp(40px,13vw,100px)}
 button{font:inherit;font-weight:700;color:#2a0a2e;background:linear-gradient(135deg,var(--gold),#ff9ecb);border:0;border-radius:999px;padding:13px 26px;cursor:pointer;box-shadow:0 6px 24px rgba(255,79,154,.5)}
 button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
 #intro{position:fixed;inset:0;z-index:10;background:radial-gradient(ellipse at 50% 40%,#3a1170,#05010f);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:20px;transition:opacity .7s}
@@ -73,7 +80,8 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
     </svg>
     <div class="counter"><b id="num">០</b><span class="kh">ពរជ័យសម្រាប់អ្នក</span></div>
   </section>
-  <section class="sc" id="s5"><h1 id="fin"></h1><div class="bigname" id="nm2"></div><p class="kh" id="finkh"></p><button id="replay">🔁 មើលម្ដងទៀត</button></section>
+  <section class="sc" id="s5"><p class="gtitle" id="gt"></p><div class="pics"><div class="pola"><img alt=""></div><div class="pola"><img alt=""></div></div><p class="kh" id="gcap"></p></section>
+  <section class="sc" id="s6"><h1 id="fin"></h1><div class="bigname" id="nm2"></div><p class="kh" id="finkh"></p><button id="replay">🔁 មើលម្ដងទៀត</button></section>
 </div>
 
 <div id="intro"><div class="gift">🎁</div><p class="kh">មានអំណោយមួយសម្រាប់អ្នក</p><button id="go">▶ ចុចដើម្បីបើក</button></div>
@@ -87,18 +95,25 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
     song:'song.mp3',      // ឯកសារចម្រៀង (ដាក់ក្នុង repo ជាមួយ index.html)
     photo:'photo.jpg',    // រូបថត (ជាជម្រើស)
     bpm:120,              // ចង្វាក់ចម្រៀង សម្រាប់ឱ្យអេក្រង់លោតតាម
-    scenes:[0,3,9,15,22,30], // វិនាទីចាប់ផ្ដើមនៃឈុតនីមួយៗ (រាប់ពីពេលចុច)
+    scenes:[0,3,9,15,22,30,180], // វិនាទីចាប់ផ្ដើមឈុត: ឈុតរូបថត = 30→180 (៣នាទី) ហើយឈុតចុងក្រោយចាប់ពី 180
+    maxPhotos:40,         // រូបថតឈ្មោះ photo1.jpg, photo2.jpg, ... រហូតដល់ 40 សន្លឹក
     wishes:['សូមឱ្យមានសុខភាពល្អ 💪','សូមឱ្យសំណាងល្អ និងសេចក្ដីសុខ ✨','សូមឱ្យសម្រេចក្ដីសុបិនទាំងអស់ 🌟','រីករាយ និងមានស្នាមញញឹមរាល់ថ្ងៃ ❤️'],
     final:'សូមឱ្យថ្ងៃនេះពោរពេញដោយសេចក្ដីរីករាយ 🎉'
   };
   var $=function(i){return document.getElementById(i)};
-  var IDS=['cd','s1','s2','s3','s4','s5'];
+  var IDS=['cd','s1','s2','s3','s4','s5','s6'];
 
   function letters(el,txt){el.innerHTML='';txt.split('').forEach(function(c,i){var s=document.createElement('span');s.className='ltr';s.style.setProperty('--i',i);s.style.color='hsl('+(i*26)+',100%,72%)';s.textContent=c===' '?'\u00a0':c;el.appendChild(s);});}
   letters($('h1'),'Happy Birthday');letters($('fin'),'Happy Birthday');
   $('nm1').textContent=$('nm2').textContent=CFG.name;$('finkh').textContent=CFG.final;
   CFG.wishes.forEach(function(w,i){var d=document.createElement('div');d.className='wish';d.style.setProperty('--i',i);d.textContent=w;$('wishes').appendChild(d);});
-  var img=$('photo');img.onload=function(){img.classList.add('ok')};img.src=CFG.photo;
+  var img=$('photo'),photos=[];img.onload=function(){img.classList.add('ok')};img.src=CFG.photo;
+  $('gt').textContent=CFG.name;
+  (function(){var found={},pend=CFG.maxPhotos;
+    function done(){if(--pend>0)return;photos=Object.keys(found).map(Number).sort(function(a,b){return a-b}).map(function(k){return found[k]});
+      if(photos.length&&!img.classList.contains('ok'))img.src=photos[0];}
+    for(var i=1;i<=CFG.maxPhotos;i++)(function(i){var im=new Image();im.onload=function(){found[i]=im.src;done()};im.onerror=done;im.src='photo'+i+'.jpg';})(i);
+  })();
 
   /* canvas */
   var cv=$('fx'),ctx=cv.getContext('2d'),W,H,stars=[];
@@ -112,10 +127,19 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
   addEventListener('pointerdown',function(e){if(e.target.closest('button'))return;rocket(e.clientX);burst(e.clientX,e.clientY,50);});
 
   /* state */
-  var audio=null,t0=0,idx=-1,party=false,emojiOn=false,lastN=0,lastBeat=-1,timers=[],started=false,stage=$('stage'),num=$('num'),shown=0,raf2;
+  var audio=null,t0=0,idx=-1,party=false,emojiOn=false,lastN=0,lastBeat=-1,timers=[],cur=0,curK=-1,started=false,stage=$('stage'),num=$('num'),shown=0,raf2;
   function fmt(n){try{return n.toLocaleString('km-KH')}catch(e){return n.toLocaleString('en-US')}}
   function count(to){cancelAnimationFrame(raf2);var f=shown,s=performance.now();(function st(t){var p=Math.min((t-s)/3000,1);shown=Math.round(f+(to-f)*(1-Math.pow(1-p,3)));num.textContent=fmt(shown);if(p<1)raf2=requestAnimationFrame(st);})(s);}
   function later(fn,ms){timers.push(setTimeout(fn,ms));}
+  function showPhoto(k){
+    var pl=document.querySelectorAll('.pola'),nx=pl[1-cur],im=nx.querySelector('img');
+    im.src=photos[k];nx.style.transform='rotate('+(Math.random()*6-3).toFixed(1)+'deg)';
+    im.style.setProperty('--dx',(Math.random()*30-15)+'px');im.style.setProperty('--dy',(Math.random()*30-15)+'px');
+    im.style.animation='none';void im.offsetWidth;im.style.animation='';
+    pl[cur].classList.remove('show');nx.classList.add('show');cur=1-cur;
+    $('gcap').textContent=CFG.wishes[k%CFG.wishes.length];
+    burst(W*(.2+Math.random()*.6),H*.25,60);if(k%2===0)rocket();
+  }
 
   function enter(i){
     IDS.forEach(function(id){$(id).classList.remove('on')});
@@ -125,10 +149,11 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
     if(i===2){burst(W/2,H*.35,140);later(rocket,500);}
     if(i===3){emojiOn=true;confetti(90);}
     if(i===4){count(10000);for(var k=0;k<5;k++)later(rocket,k*500);later(function(){$('cake').classList.add('out');confetti(160);burst(W/2,H*.4,160);},3200);}
-    if(i===5){party=true;document.body.classList.add('party');confetti(220);for(var k=0;k<6;k++)later(rocket,k*250);}
+    if(i===5){party=true;document.body.classList.add('party');$('s5').classList.toggle('nopic',!photos.length);confetti(200);for(var k=0;k<6;k++)later(rocket,k*250);}
+    if(i===6){confetti(260);burst(W/2,H*.4,200);for(var k=0;k<8;k++)later(rocket,k*250);}
   }
 
-  function reset(){timers.forEach(clearTimeout);timers=[];idx=-1;party=false;emojiOn=false;lastN=0;shown=0;num.textContent=fmt(0);
+  function reset(){timers.forEach(clearTimeout);timers=[];cur=0;curK=-1;document.querySelectorAll('.pola').forEach(function(p){p.classList.remove('show')});idx=-1;party=false;emojiOn=false;lastN=0;shown=0;num.textContent=fmt(0);
     document.body.classList.remove('party','lit');$('cake').classList.remove('out');IDS.forEach(function(id){$(id).classList.remove('on')});}
   function start(){reset();if(audio){try{audio.currentTime=0;var p=audio.play();if(p&&p.catch)p.catch(function(){});}catch(e){}}t0=performance.now();started=true;}
 
@@ -143,6 +168,7 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
       if(idx===0){var n=Math.max(1,Math.ceil(CFG.scenes[1]-t));if(n!==lastN){lastN=n;var c=$('cdn');c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick');burst(W/2,H/2,40);}}
       var bt=t*CFG.bpm/60,b=bt%1,p=Math.pow(1-b,3);
       stage.style.transform='scale('+(1+p*(party?.045:.02)).toFixed(4)+')';
+      if(idx===5&&photos.length){var iv=Math.min(12,Math.max(4,(CFG.scenes[6]-CFG.scenes[5])/photos.length)),k=Math.floor((t-CFG.scenes[5])/iv)%photos.length;if(k!==curK){curK=k;showPhoto(k);}}
       var bi=Math.floor(bt);
       if(bi!==lastBeat){lastBeat=bi;if(party){if(bi%2===0)rocket();if(bi%4===0)confetti(25);}}
     }
