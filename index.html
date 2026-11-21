@@ -53,6 +53,8 @@ h1{font-family:'Pacifico',cursive;font-weight:400;margin:0;font-size:clamp(40px,
 @keyframes kb{from{transform:scale(.96)}to{transform:scale(1.07) translate(var(--dx,0),var(--dy,0))}}
 .nopic .pics{display:none}.nopic .gtitle{font-size:clamp(40px,13vw,100px)}
 button{font:inherit;font-weight:700;color:#2a0a2e;background:linear-gradient(135deg,var(--gold),#ff9ecb);border:0;border-radius:999px;padding:13px 26px;cursor:pointer;box-shadow:0 6px 24px rgba(255,79,154,.5)}
+button.alt{background:var(--glass);color:var(--ink);box-shadow:none;border:1px solid rgba(255,255,255,.3)}
+.recording #replay,.recording #mute{display:none}
 button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
 #intro{position:fixed;inset:0;z-index:10;background:radial-gradient(ellipse at 50% 40%,#3a1170,#05010f);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:20px;transition:opacity .7s}
 #intro.hide{opacity:0;pointer-events:none}
@@ -84,7 +86,7 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
   <section class="sc" id="s6"><h1 id="fin"></h1><div class="bigname" id="nm2"></div><p class="kh" id="finkh"></p><button id="replay">🔁 មើលម្ដងទៀត</button></section>
 </div>
 
-<div id="intro"><div class="gift">🎁</div><p class="kh">មានអំណោយមួយសម្រាប់អ្នក</p><button id="go">▶ ចុចដើម្បីបើក</button></div>
+<div id="intro"><div class="gift">🎁</div><p class="kh">មានអំណោយមួយសម្រាប់អ្នក</p><button id="go">▶ ចុចដើម្បីបើក</button><button id="rec" class="alt" style="display:none">🎥 បង្កើតជាវីដេអូ (ទាញយក)</button></div>
 <button id="mute" aria-label="បិទ/បើកសម្លេង">🔊</button>
 
 <script>
@@ -196,6 +198,22 @@ button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
   $('go').addEventListener('click',function(){
     try{audio=new Audio(CFG.song);audio.loop=true;}catch(e){}
     $('intro').classList.add('hide');start();
+  });
+  /* បង្កើតវីដេអូ: ថតផ្ទាំងបច្ចុប្បន្ន (Chrome/Edge លើកុំព្យូទ័រ) រួចទាញយកជា .webm */
+  if(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia&&window.MediaRecorder&&!/iPhone|iPad|Android/i.test(navigator.userAgent))$('rec').style.display='';
+  $('rec').addEventListener('click',async function(){
+    var st;
+    try{st=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:true,preferCurrentTab:true,selfBrowserSurface:'include'});}catch(e){return;}
+    var mt=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].filter(function(m){return MediaRecorder.isTypeSupported(m)})[0];
+    var rec=new MediaRecorder(st,{mimeType:mt,videoBitsPerSecond:6000000}),chunks=[];
+    rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data);};
+    rec.onstop=function(){st.getTracks().forEach(function(t){t.stop()});document.body.classList.remove('recording');
+      var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(chunks,{type:'video/webm'}));a.download='happy-birthday.webm';document.body.appendChild(a);a.click();a.remove();};
+    try{audio=new Audio(CFG.song);audio.loop=false;}catch(e){}
+    $('intro').classList.add('hide');document.body.classList.add('recording');
+    rec.start(1000);start();
+    setTimeout(function(){if(rec.state!=='inactive')rec.stop();},(CFG.scenes[CFG.scenes.length-1]+10)*1000);
+    st.getVideoTracks()[0].addEventListener('ended',function(){if(rec.state!=='inactive')rec.stop();});
   });
   $('replay').addEventListener('click',start);
   $('mute').addEventListener('click',function(){if(!audio)return;audio.muted=!audio.muted;this.textContent=audio.muted?'🔇':'🔊';});
